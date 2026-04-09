@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Cadastrar Jogo</title>
+
+<link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous"
+/>
+</head>
+<body>
+<div class="container pt-5">
+    <h1>Cadastrar Jogo</h1>
+    <form action="#" th:action="@{/game/save}" th:object="${game}" method="POST">
+        
+        <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">Título</label>
+            <div class="col-sm-10">
+                <input type="text" th:field="*{title}" class="form-control" id="title" name="title" placeholder="Digite o título do jogo">
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="description">Descrição:</label>
+            <div class="col-sm-10">
+                <textarea id="description" th:field="*{description}" class="form-control" name="description" rows="4" cols="50" placeholder="Breve descrição do jogo..."></textarea>
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="price">Preço (R$):</label>
+            <div class="col-sm-10">
+                <input type="number" th:field="*{price}" class="form-control" id="price" name="price" step="0.01"
+                    placeholder="Ex: 199.90" >
+            </div>
+        </div>
+        
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label" for="stockQuantity">Qtd. Estoque:</label>
+            <div class="col-sm-10">
+                <input type="number" th:field="*{stockQuantity}" class="form-control" id="stockQuantity" name="stockQuantity"
+                    placeholder="Digite a quantidade de cópias disponíveis">
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-info col-md-3 mt-3">Salvar Jogo</button>
+    </form>
+</div>
+</body>
+</html>
