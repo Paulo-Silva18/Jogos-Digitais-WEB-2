@@ -1,44 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Catálogo de Jogos</title>
+<head>
+    <th:block th:replace="~{fragments/head :: head('Catálogo de Jogos')}"></th:block>
+</head>
+<body>
+    <th:block th:replace="~{fragments/header :: header()}"></th:block>
 
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <div class="container pt-5">
-      <a th:href="@{/game/create}" class="btn btn-primary mb-3">Cadastrar Novo Jogo</a>
-      <h1>Catálogo de Jogos</h1>
-      <table class="table table-striped table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Título</th>
-            <th scope="col">Descrição</th>
-            <th scope="col">Preço</th>
-            <th scope="col">Qtd. em Estoque</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="game : ${gamesList}">
-            <td scope="row" th:text="${game.title}"></td>
-            <td th:text="${game.description}"></td>
-            <td th:text="'R$ ' + ${game.price}"></td>
-            <td th:text="${game.stockQuantity}"></td>
-            <td>
-              <a th:href="@{/game/delete/{id}(id=${game.id})}">Deletar</a>
-            </td>
-            <td>
-              <a th:href="@{/game/edit/{id}(id=${game.id})}">Editar</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="container pt-5 mb-5">
+        <a th:href="@{/game/create}" class="btn btn-primary mb-3">Cadastrar Novo Jogo</a>
+        
+        <h1 class="mb-4">Catálogo de Jogos</h1>
+        
+        <table class="table table-striped table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Título</th>
+                    <th scope="col">Descrição</th>
+                    <th scope="col">Preço</th>
+                    <th scope="col">Qtd. em Estoque</th>
+                    <th scope="col" class="text-center">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="game : ${gamesList}">
+                    <td class="align-middle" th:text="${game.title}"></td>
+                    <td class="align-middle" th:text="${game.description}"></td>
+                    <td class="align-middle" th:text="'R$ ' + ${game.price}"></td>
+                    <td class="align-middle" th:text="${game.stockQuantity}"></td>
+                    <td class="text-center align-middle">
+                        <a th:href="@{/game/edit/{id}(id=${game.id})}" class="btn btn-sm btn-warning">Editar</a>
+                        <a th:href="@{/game/delete/{id}(id=${game.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja deletar este jogo?');">Deletar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-  </body>
+
+    <th:block th:replace="~{fragments/footer :: footer()}"></th:block>
+</body>
 </html>

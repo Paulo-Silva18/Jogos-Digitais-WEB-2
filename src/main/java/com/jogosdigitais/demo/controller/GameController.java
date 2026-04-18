@@ -7,9 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
 
 import com.jogosdigitais.demo.model.Game;
 import com.jogosdigitais.demo.service.GameService;
+import jakarta.validation.Valid;
+
 
 @Controller
 public class GameController {
@@ -29,10 +32,18 @@ public class GameController {
     }
 
     @PostMapping("/game/save")
-    public String postMethodName(@ModelAttribute("game") Game game) {
+    public String save(@ModelAttribute @Valid Game game, BindingResult result, Model model) {
+
+        System.out.println(game);
+        if (result.hasErrors()) {
+            model.addAttribute("game", game);
+            return "game/create";
+        }
         gameService.saveGame(game);
         return "redirect:/game";
     }
+
+    
 
     @GetMapping("/game/delete/{id}")
     public String delete(@PathVariable Long id) {

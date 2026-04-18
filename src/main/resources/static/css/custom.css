@@ -1,0 +1,11 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Altura fixa do rodapé */
+    height: 60px;
+    line-height: 60px; /* Centraliza verticalmente o texto */
+    background-color: #343a40;
+    color: white; /* Adicionado para contrastar com o fundo escuro */
+    text-align: center; /* Centraliza o conteúdo do rodapé */
+}
