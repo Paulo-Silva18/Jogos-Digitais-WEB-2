@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Importa o head padrão -->
+    <th:block th:replace="~{fragments/head :: head('Erro 404 - Página Não Encontrada')}"></th:block>
+    
+    <!-- Estilos exclusivos desta página -->
+    <style>
+        body { background-color: #1a1a2e; color: #e9ecef; }
+        h1.error-title { 
+            color: #e94560; 
+            text-shadow: 4px 4px 0px #0f3460; 
+            font-weight: 900; 
+            letter-spacing: 2px;
+        }
+        .lead-store { color: #00d4ff; font-weight: bold; font-size: 1.5rem; }
+        .btn-store { 
+            background-color: #00d4ff; 
+            border: none; 
+            color: #1a1a2e; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            padding: 12px 30px;
+            font-size: 1.1rem;
+        }
+        .btn-store:hover { 
+            background-color: #00a8cc; 
+            transform: scale(1.05); 
+            color: white; 
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu de Navegação -->
+    <th:block th:replace="~{fragments/header :: header()}"></th:block>
+
+    <!-- Centralização na tela -->
+    <div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+        <div class="text-center">
+            <h1 class="display-1 error-title mb-3">404</h1>
+            <p class="lead-store">Jogo ou Página Não Encontrada!</p>
+            <p class="mb-4">Parece que esse item saiu do nosso estoque, foi removido da loja ou o link está quebrado.</p>
+            
+            <!-- Botão apontando para o catálogo com ícone de loja -->
+            <a th:href="@{/game}" class="btn btn-store rounded-pill">🛒 Voltar para o Catálogo</a>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <th:block th:replace="~{fragments/footer :: footer()}"></th:block>
+</body>
+</html>

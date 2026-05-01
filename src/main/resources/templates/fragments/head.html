@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<!-- Adicionamos o xmlns:sec aqui para o Thymeleaf reconhecer as tags de segurança -->
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<!-- ==========================================
+     FRAGMENTO 1: HEAD (Scripts e CSS)
+=========================================== -->
 <head th:fragment="head(title)">
   <meta charset="UTF-8" />
   <title th:text="${title}"></title>
@@ -25,3 +32,65 @@
   ></script>
   <link rel="stylesheet" th:href="@{/css/custom.css}"/>
 </head>
+
+<!-- ==========================================
+     FRAGMENTO 2: HEADER (Menu de Navegação)
+=========================================== -->
+<nav th:fragment="header()" class="container-fluid navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand text-info font-weight-bold" th:href="@{/game}">GamesStore</a>
+    
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown active">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Jogos
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" th:href="@{/game}" >Listar Catálogo</a>
+            
+            <!-- Somente usuários com a Role 'Admin' verão a opção de cadastrar jogos -->
+            <a sec:authorize="hasAuthority('Admin')" class="dropdown-item text-success font-weight-bold" th:href="@{/game/create}">Cadastrar Novo Jogo</a>
+            
+            <div class="dropdown-divider"></div>
+            
+            <!-- Link extra opcional: Se quiser que só o Admin possa registrar novos usuários -->
+            <a sec:authorize="hasAuthority('Admin')" class="dropdown-item" th:href="@{/register}">Gerenciar Usuários</a>
+          </div>
+        </li>
+      </ul>
+      
+      <!-- Formulário de Logout / Sair -->
+      <form class="form-inline my-2 my-lg-0" action="/logout" method="post">
+        <!-- Token de segurança do Spring (Obrigatório para o post de logout funcionar) -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        
+        <!-- Adicionei as classes btn-outline-danger para combinar com a loja e ficar bonito no header escuro -->
+        <button type="submit" class="btn btn-outline-danger btn-sm d-lg-inline-block my-2 my-sm-0 px-4 font-weight-bold">Sair</button>
+      </form>
+      
+    </div>
+  </div>
+</nav>
+
+</html>

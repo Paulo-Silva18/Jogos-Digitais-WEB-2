@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Importa o head padrão -->
+    <th:block th:replace="~{fragments/head :: head('Acesso Negado - Área Restrita')}"></th:block>
+    
+    <!-- Estilos exclusivos desta página mantendo a identidade gamer -->
+    <style>
+        body { background-color: #1a1a2e; color: #e9ecef; }
+        h1.denied-title { 
+            color: #ff2e63; /* Um vermelho/rosa mais forte para chamar atenção */
+            text-shadow: 4px 4px 0px #0f3460; 
+            font-weight: 900; 
+            letter-spacing: 2px;
+        }
+        .lead-store { color: #00d4ff; font-weight: bold; font-size: 1.5rem; }
+        .btn-store { 
+            background-color: #00d4ff; 
+            border: none; 
+            color: #1a1a2e; 
+            font-weight: bold; 
+            transition: 0.3s; 
+            padding: 12px 30px;
+            font-size: 1.1rem;
+        }
+        .btn-store:hover { 
+            background-color: #00a8cc; 
+            transform: scale(1.05); 
+            color: white; 
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menu de Navegação -->
+    <th:block th:replace="~{fragments/header :: header()}"></th:block>
+
+    <!-- Centralização na tela com vh ajustado -->
+    <div class="d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+        <div class="text-center">
+            <h1 class="display-1 denied-title mb-3">403: ACESSO NEGADO</h1>
+            <p class="lead-store">Nível de Permissão Insuficiente!</p>
+            <p class="mb-4">Parece que você está tentando acessar uma área VIP ou restrita apenas para Admins da loja.</p>
+            
+            <div class="d-flex justify-content-center">
+                <!-- Botão retornando para o catálogo -->
+                <a th:href="@{/game}" class="btn btn-store rounded-pill mr-2">🛡️ Voltar para a Loja</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <th:block th:replace="~{fragments/footer :: footer()}"></th:block>
+</body>
+</html>
