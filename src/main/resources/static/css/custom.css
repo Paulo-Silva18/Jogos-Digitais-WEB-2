@@ -1,11 +1,94 @@
+body {
+    background-color: #1a1a2e;
+    color: #e9ecef;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    border-bottom: 2px solid #00d4ff;
+}
+
+.navbar-brand {
+    text-shadow: 0 0 10px #00d4ff;
+}
+
+.container {
+    background-color: #16213e;
+    border-radius: 15px;
+    padding: 30px;
+    margin-top: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid #0f3460;
+}
+
+h1 {
+    color: #00d4ff;
+    text-shadow: 2px 2px #e94560;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.table {
+    color: #e9ecef;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table thead th {
+    border: none;
+    color: #00d4ff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.table tbody tr {
+    background-color: #0f3460;
+    transition: transform 0.2s;
+}
+
+.table tbody tr:hover {
+    transform: scale(1.01);
+    background-color: #1a1a2e;
+}
+
+.table td {
+    border: none;
+    padding: 20px;
+}
+
+.btn-primary {
+    background-color: #e94560;
+    border: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #ff2e63;
+    box-shadow: 0 0 15px #e94560;
+}
+
+.btn-warning {
+    background-color: #f8b400;
+    border: none;
+    color: #1a1a2e;
+    font-weight: bold;
+}
+
+.btn-danger {
+    background-color: #ff4b2b;
+    border: none;
+    font-weight: bold;
+}
+
 .footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    /* Altura fixa do rodapé */
     height: 60px;
-    line-height: 60px; /* Centraliza verticalmente o texto */
-    background-color: #343a40;
-    color: white; /* Adicionado para contrastar com o fundo escuro */
-    text-align: center; /* Centraliza o conteúdo do rodapé */
+    line-height: 60px;
+    background-color: #1a1a2e;
+    color: #00d4ff;
+    text-align: center;
+    border-top: 1px solid #0f3460;
+    margin-top: 50px;
 }

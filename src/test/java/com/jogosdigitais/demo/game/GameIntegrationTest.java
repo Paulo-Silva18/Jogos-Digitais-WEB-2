@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test") // Usa application-test.properties
 @Transactional // Limpa o banco após cada teste
 public class GameIntegrationTest {
 

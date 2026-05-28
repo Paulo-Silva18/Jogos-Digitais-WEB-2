@@ -14,4 +14,3 @@ public class TestConfig {
         return Mockito.mock(GameService.class);
     }
 }
- 
