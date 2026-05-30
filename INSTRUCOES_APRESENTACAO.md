@@ -59,6 +59,24 @@ Após o projeto iniciar (você verá a mensagem `Started DemoApplication` no con
 3.  Vá em [http://localhost:8080/register](http://localhost:8080/register).
 4.  No campo **Autoridades/Roles**, escreva exatamente: `Admin` (Isso é necessário para ter permissão de gerenciar os jogos).
 5.  Faça o login com o email e senha cadastrados.
+6.  **Gerenciar Pedidos:** Agora você pode acessar o menu "Jogos > Listar Pedidos" para realizar vendas, selecionando jogos e definindo quantidades.
+
+---
+
+## 💎 Novas Funcionalidades (Sincronização)
+
+Este projeto foi atualizado para incluir um **Sistema Completo de Pedidos**, sincronizado com as melhores práticas de desenvolvimento Spring Boot:
+
+*   **Gestão de Estoque:** O sistema valida automaticamente se há unidades disponíveis antes de confirmar uma venda.
+*   **Interface Dinâmica:** Adição de múltiplos itens em um único pedido de forma fluida.
+*   **Arquitetura Limpa:** Uso de Services e Repositories dedicados para garantir a organização do código.
+
+---
+
+## 📚 Aprendizado e Documentação
+
+Para entender o funcionamento interno do código (lógica, analogias e arquitetura), consulte o arquivo:
+👉 `EXPLICACAO_TECNICA.md` (na raiz do projeto).
 
 ---
 
