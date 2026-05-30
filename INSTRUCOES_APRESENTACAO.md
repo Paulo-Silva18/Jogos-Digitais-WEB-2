@@ -60,16 +60,24 @@ Após o projeto iniciar (você verá a mensagem `Started DemoApplication` no con
 4.  No campo **Autoridades/Roles**, escreva exatamente: `Admin` (Isso é necessário para ter permissão de gerenciar os jogos).
 5.  Faça o login com o email e senha cadastrados.
 6.  **Gerenciar Pedidos:** Agora você pode acessar o menu "Jogos > Listar Pedidos" para realizar vendas, selecionando jogos e definindo quantidades.
+7.  **Explorar a API REST:**
+    *   Acesse a documentação interativa (Swagger): [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+    *   Teste os endpoints da API usando o Postman:
+        *   **Base URL:** `http://localhost:8080/api/games`
+        *   **Autenticação:** Use "Basic Auth" com o email e senha do Admin cadastrado.
+        *   **Validar Usuário:** `GET http://localhost:8080/api/auth/user` (Retorna username e roles em JSON).
 
 ---
 
-## 💎 Novas Funcionalidades (Sincronização)
+## 💎 Novas Funcionalidades (Sincronização & API)
 
-Este projeto foi atualizado para incluir um **Sistema Completo de Pedidos**, sincronizado com as melhores práticas de desenvolvimento Spring Boot:
+Este projeto foi atualizado para incluir um **Sistema Completo de Pedidos** e uma **API REST robusta**, sincronizados com as melhores práticas de desenvolvimento Spring Boot:
 
+*   **Exposição de API REST:** Endpoints CRUD para jogos e validação de credenciais, preparados para integração com clientes React/Mobile.
+*   **Segurança Híbrida:** Suporte simultâneo para *Form Login* (Navegador) e *HTTP Basic Auth* (API).
+*   **Documentação Automática:** Swagger/OpenAPI integrado para facilitar o consumo da API por outros desenvolvedores.
+*   **Configuração CORS:** Preparado para receber requisições de um cliente React rodando em `localhost:5173`.
 *   **Gestão de Estoque:** O sistema valida automaticamente se há unidades disponíveis antes de confirmar uma venda.
-*   **Interface Dinâmica:** Adição de múltiplos itens em um único pedido de forma fluida.
-*   **Arquitetura Limpa:** Uso de Services e Repositories dedicados para garantir a organização do código.
 
 ---
 
