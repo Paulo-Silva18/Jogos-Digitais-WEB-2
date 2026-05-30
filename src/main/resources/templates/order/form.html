@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <th:block th:replace="~{fragments/head :: head('Gerenciar Pedido')}"></th:block>
+    <style>
+        body { background-color: #1a1a2e; color: #e9ecef; }
+        h2 { color: #00d4ff; text-shadow: 2px 2px #e94560; font-weight: bold; }
+        .form-container { background-color: #16213e; border-radius: 15px; padding: 30px; border: 1px solid #0f3460; }
+        .item-row { background-color: #0f3460; padding: 15px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #1a1a2e; }
+        label { color: #00d4ff; font-weight: bold; }
+        .form-control { background-color: #1a1a2e; color: white; border: 1px solid #0f3460; }
+        .form-control:focus { background-color: #1a1a2e; color: white; border-color: #00d4ff; box-shadow: 0 0 10px #00d4ff; }
+    </style>
+</head>
+<body>
+    <th:block th:replace="~{fragments/header :: header()}"></th:block>
+
+    <div class="container pt-5 mb-5">
+      <h2 class="mb-4" th:text="${order.id} == null ? 'Criar Novo Pedido' : 'Editar Pedido #' + ${order.id}"></h2>
+
+      <div class="form-container shadow-lg">
+        <form th:action="@{/order/save}" th:object="${order}" method="post">
+            <p th:if="${#fields.hasErrors('global')}" class="text-danger font-weight-bold" th:errors="*{global}"></p>
+            <input type="hidden" th:field="*{id}" />
+            
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="orderDate">Data do pedido</label>
+                <input type="datetime-local" class="form-control" th:field="*{orderDate}" id="orderDate" required />
+              </div>
+            </div>
+
+            <hr style="border-top: 1px solid #00d4ff;" />
+
+            <h5 class="text-info mb-3">Itens do Pedido</h5>
+            <div id="items-container">
+              <div th:each="item, iter : *{items}" class="form-row item-row">
+                <div class="form-group col-md-5">
+                    <input type="hidden" th:field="*{items[__${iter.index}__].id}" />
+                    <label>Jogo</label>
+                    <select class="form-control" th:field="*{items[__${iter.index}__].game.id}" required>
+                        <option th:each="g : ${games}" th:value="${g.id}" th:text="${g.title}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label>Quantidade</label>
+                  <input type="number" min="1" class="form-control" th:field="*{items[__${iter.index}__].quantity}" required />
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label>Preço Unitário</label>
+                  <input type="number" step="0.01" class="form-control" th:field="*{items[__${iter.index}__].unitPrice}" required />
+                </div>
+
+                <div class="form-group col-md-1 d-flex align-items-end">
+                  <button type="button" class="btn btn-danger remove-item font-weight-bold">X</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="button" id="add-item" class="btn btn-outline-info mr-2">➕ Adicionar Jogo</button>
+                <button type="submit" class="btn btn-primary px-5">Salvar Pedido</button>
+                <a th:href="@{/order}" class="btn btn-secondary ml-2">Cancelar</a>
+            </div>
+
+            <!-- Template para novas linhas (escondido) -->
+            <div id="item-template" style="display: none">
+              <div class="form-row item-row">
+                <div class="form-group col-md-5">
+                  <label>Jogo</label>
+                  <select class="form-control game-select">
+                    <option th:each="g : ${games}" th:value="${g.id}" th:text="${g.title}"></option>
+                  </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label>Quantidade</label>
+                  <input type="number" min="1" class="form-control quantity-input" value="1" />
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label>Preço Unitário</label>
+                  <input type="number" step="0.01" class="form-control price-input" value="0.00" />
+                </div>
+
+                <div class="form-group col-md-1 d-flex align-items-end">
+                  <button type="button" class="btn btn-danger remove-item font-weight-bold">X</button>
+                </div>
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <th:block th:replace="~{fragments/footer :: footer()}"></th:block>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("items-container");
+        const templateHtml = document.getElementById("item-template").innerHTML;
+        let index = container.querySelectorAll('.item-row').length;
+
+        document.getElementById("add-item").addEventListener("click", function () {
+            const wrapper = document.createElement("div");
+            wrapper.innerHTML = templateHtml;
+            const newRow = wrapper.firstElementChild;
+
+            // Define os names corretos para o Spring binding
+            newRow.querySelector(".game-select").name = `items[${index}].game.id`;
+            newRow.querySelector(".quantity-input").name = `items[${index}].quantity`;
+            newRow.querySelector(".price-input").name = `items[${index}].unitPrice`;
+
+            container.appendChild(newRow);
+            index++;
+        });
+
+        // Remoção + reindexação
+        container.addEventListener("click", function (e) {
+          if (e.target.classList.contains("remove-item")) {
+            e.target.closest(".item-row").remove();
+            reindexItems();
+          }
+        });
+
+        function reindexItems() {
+          const rows = container.querySelectorAll(".item-row");
+          rows.forEach((row, i) => {
+            const select = row.querySelector("select");
+            const inputs = row.querySelectorAll("input");
+            
+            if(select) select.name = `items[${i}].game.id`;
+            
+            inputs.forEach(el => {
+                if(el.name.includes(".id") && !el.name.includes("game.id")) {
+                    el.name = `items[${i}].id`;
+                } else if(el.name.includes("quantity")) {
+                    el.name = `items[${i}].quantity`;
+                } else if(el.name.includes("unitPrice")) {
+                    el.name = `items[${i}].unitPrice`;
+                }
+            });
+          });
+          index = rows.length;
+        }
+      });
+    </script>
+  </body>
+</html>

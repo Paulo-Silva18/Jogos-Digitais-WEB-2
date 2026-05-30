@@ -28,8 +28,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers("/home", "/register", "/saveUser").permitAll()
-                .requestMatchers("/game/*").hasAuthority("Admin")
+                .requestMatchers("/home", "/register", "/saveUser", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/game").authenticated()
+                .requestMatchers("/game/**").hasAuthority("Admin")
+                .requestMatchers("/order/**").authenticated()
                 .anyRequest().authenticated())
                 .formLogin(login -> login
                         .defaultSuccessUrl("/", true))

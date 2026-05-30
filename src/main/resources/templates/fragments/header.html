@@ -36,6 +36,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" th:href="@{/game}" >Listar Catálogo</a>
+            <a class="dropdown-item" th:href="@{/order}" >Listar Pedidos</a>
             
             <!-- Somente usuários com a Role 'Admin' verão a opção de cadastrar jogos -->
             <a sec:authorize="hasAuthority('Admin')" class="dropdown-item text-success font-weight-bold" th:href="@{/game/create}">Cadastrar Novo Jogo</a>
