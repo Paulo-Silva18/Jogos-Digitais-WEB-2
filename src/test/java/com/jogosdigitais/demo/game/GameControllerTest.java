@@ -1,28 +1,35 @@
 package com.jogosdigitais.demo.game;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.jogosdigitais.demo.config.TestConfig;
 import com.jogosdigitais.demo.controller.GameController;
 import com.jogosdigitais.demo.model.Game;
 import com.jogosdigitais.demo.service.GameService;
-import com.jogosdigitais.demo.config.TestConfig;
-
-import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
-
-import java.util.List;
 
 @WebMvcTest(GameController.class)
 @Import(TestConfig.class)
@@ -34,66 +41,75 @@ public class GameControllerTest {
     @Autowired
     private GameService gameService;
 
-    @MockBean
-    private com.jogosdigitais.demo.impl.UserServiceImpl userService;
-
-    @org.junit.jupiter.api.BeforeEach
-    void setup() {
+    @AfterEach
+    void resetMocks() {
         reset(gameService);
     }
 
     private List<Game> testCreateGameList(){
         Game gameB = new Game();
         gameB.setId(1L);
-        gameB.setDescription("Descrição");
-        gameB.setTitle("Game B");
-        gameB.setPrice(65.24F);
+        gameB.setDescription("Descricao");
+        gameB.setTitle("Jogo B");
+        gameB.setPrice(65.24f);
         gameB.setStockQuantity(121);
 
         return List.of(gameB);
     }
 
     @Test
-    @WithMockUser
-    @DisplayName("GET /game - Listar jogos na tela Index sem usuário autenticado")
+    @DisplayName("GET /game - Listar jogos na tela index sem usuário autenticado")
     void testIndexNotAuthenticatedUser() throws Exception {
-        mockMvc.perform(get("/game"))
-                .andExpect(status().isOk()); // Spring Security configured with WithMockUser defaults to authenticated
+         mockMvc.perform(get("/game"))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
-    @WithMockUser(username = "aluno@iftm.edu.br", authorities = { "Admin" })
-    @DisplayName("GET /game - Listar jogos na tela Index com usuário logado")
+    @WithMockUser
+    @DisplayName("GET /game - Listar jogos na tela index com usuário logado")
     void testIndexAuthenticatedUser() throws Exception {
         when(gameService.getAllGames()).thenReturn(testCreateGameList());
 
         mockMvc.perform(get("/game"))
+               .andExpect(status().isOk())
+               .andExpect(view().name("game/index"))
+               .andExpect(model().attributeExists("gamesList"))
+               .andExpect(content().string(containsString("Catálogo de Jogos")))
+               .andExpect(content().string(containsString("Jogo B")));
+    }
+
+    @Test
+    @WithMockUser(username = "aluno@iftm.edu.br", authorities = { "Admin" })
+    @DisplayName("GET /game - Exibe link de acesso ao form de cadastro de jogo")
+    void testCreateFormAuthorizedUser() throws Exception {
+        when(gameService.getAllGames()).thenReturn(testCreateGameList());
+        mockMvc.perform(get("/game"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("game/index"))
-                .andExpect(model().attributeExists("gamesList"))
-                .andExpect(content().string(containsString("Catálogo de Jogos")))
-                .andExpect(content().string(containsString("Game B")));
+                .andExpect(content().string(containsString("Cadastrar Novo Jogo")));
     }
 
     @Test
-    @WithMockUser(username = "aluno@iftm.edu.br", authorities = { "Admin" })
-    @DisplayName("GET /game/create - Exibe formulário de criação")
-    void testCreateFormAuthorizedUser() throws Exception {
-        mockMvc.perform(get("/game/create"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("game/create"))
-                .andExpect(model().attributeExists("game"));
+    @WithMockUser(username = "aluno2@iftm.edu.br", authorities = { "Manager" })
+    @DisplayName("GET /game - Verificar o link de cadastrar para um usuario não admin logado")
+    void testCreateFormNotAuthorizedUser() throws Exception {
+        when(gameService.getAllGames()).thenReturn(testCreateGameList());
+       // Obter o HTML da página renderizada pelo controlador
+       mockMvc.perform(get("/game"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("game/index"))
+            .andExpect(content().string(not(containsString("Cadastrar Novo Jogo"))));
     }
 
     @Test
-    @WithMockUser(username = "aluno@iftm.edu.br", authorities = { "Admin" })
+    @WithMockUser
     @DisplayName("POST /game/save - Falha na validação e retorna para o formulário")
     void testSaveGameValidationError() throws Exception {
-        Game game = new Game(); // Jogo sem nome, o que causará erro de validação
+        Game game = new Game(); // Jogo sem título, o que causará erro de validação
 
         mockMvc.perform(post("/game/save")
-                .with(csrf())
-                .flashAttr("game", game))
+                        .with(csrf())
+                        .flashAttr("game", game))
                 .andExpect(status().isOk())
                 .andExpect(view().name("game/create"))
                 .andExpect(model().attributeHasErrors("game"));
@@ -108,15 +124,16 @@ public class GameControllerTest {
         Game game = new Game();
         game.setTitle("Novo Jogo");
         game.setDescription("Descrição");
-        game.setPrice(100F);
+        game.setPrice(100f);
         game.setStockQuantity(10);
 
         mockMvc.perform(post("/game/save")
-                .with(csrf())
-                .flashAttr("game", game))
+                        .with(csrf())
+                        .flashAttr("game", game))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/game"));
+                .andExpect(view().name("redirect:/game"));
 
         verify(gameService).saveGame(any(Game.class));
     }
+
 }
